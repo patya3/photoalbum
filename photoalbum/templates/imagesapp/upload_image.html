@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<section id="login" class="bg-light py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4>
+                            <i class="fas fa-sign-in-alt"></i> Upload Photo</h4>
+                    </div>
+                    {% include 'partials/_alerts.html' %}
+                    <div class="card-body">
+                        <form enctype="multipart/form-data" action="{% url 'upload_image' %}" method="POST">
+                            {% csrf_token %}
+                            {{ form.name.errors }}
+                            <div class="form-group">
+                                <label for="{{ form.name.id_for_label }}">Photo Name: </label>
+                                {{ form.name }}
+                            </div>
+                            {{ form.description.errors }}
+                            <div class="form-group">
+                                <label for="{{ form.description.id_for_label }}">Description</label>
+                                {{ form.description }}
+                            </div>
+                            {{ form.photo.errors }}
+                            <div class="form-group">
+                                <label for="{{ form.photo.id_for_label }}">Photo</label>
+                                {{ form.photo }}
+                            </div>
+                            <input type="submit" value="Upload Photo" class="btn btn-secondary btn-block">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
