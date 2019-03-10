@@ -79,10 +79,10 @@ WSGI_APPLICATION = 'photoalbum.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'localhost:1521/orclpdb',
+        'NAME': '192.168.0.24:1521/xe',
         'USER': 'patya3',
         'PASSWORD': 'Password2018',
-        
+
     }
 }
 
@@ -138,3 +138,5 @@ from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
+
+AUTH_USER_MODEL = 'users.User'

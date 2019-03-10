@@ -1,8 +1,8 @@
 from django.shortcuts import render
-from imagesapp.models import Images
+from imagesapp.models import Image
 
 def index(request):
-    images = Images.objects.order_by('-upload_date')[:3]
+    images = Image.objects.order_by('-upload_date')[:3]
 
     context = {
         'images': images

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth.models import User, auth
+from django.contrib.auth.models import auth
+from .models import User
 
 def register(request):
     if request.method == 'POST':
@@ -9,6 +10,7 @@ def register(request):
         last_name = request.POST['last_name']
         username = request.POST['username']
         email = request.POST['email']
+        location = request.POST['location']
         password = request.POST['password']
         password2 = request.POST['password2']
 

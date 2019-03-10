@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Images
+from .models import Image, Category, City, Country, Rating, County
 
 
 class ImagesAdmin(admin.ModelAdmin):
@@ -10,4 +10,9 @@ class ImagesAdmin(admin.ModelAdmin):
     list_per_page = 25
 
 
-admin.site.register(Images, ImagesAdmin)
+admin.site.register(Image, ImagesAdmin)
+admin.site.register(Category)
+admin.site.register(City)
+admin.site.register(Country)
+admin.site.register(County)
+admin.site.register(Rating)

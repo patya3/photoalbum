@@ -1,11 +1,11 @@
 from django import forms
-from .models import Images
+from .models import Image
 
 
 class ImageUploadForm(forms.ModelForm):
 
     class Meta:
-        model = Images
+        model = Image
         fields = ['name', 'description', 'photo']
         
     def __init__(self, *args, **kwargs):

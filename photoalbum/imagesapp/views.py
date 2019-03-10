@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import auth
 
-from .models import Images
+from .models import Image
 from .forms import ImageUploadForm
 
 
@@ -30,7 +30,7 @@ def upload_image(request):
         return redirect('index')
 
 def index(request):
-    images = Images.objects.order_by('-upload_date')
+    images = Image.objects.order_by('-upload_date')
 
     paginator = Paginator(images, 6)
     page = request.GET.get('page')
@@ -42,7 +42,7 @@ def index(request):
     return render(request, 'imagesapp/list_images.html', context)
 
 def image(request, image_id):
-    image = get_object_or_404(Images, pk=image_id)
+    image = get_object_or_404(Image, pk=image_id)
 
     context = {
         'image': image
