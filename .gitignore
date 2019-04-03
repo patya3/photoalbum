@@ -89,4 +89,5 @@ local_settings.py
 db.sqlite3
 **/migrations
 photoalbum/static/
-photoalbum/media/photos/2019/
+photoalbum/media/photos/
+.idea

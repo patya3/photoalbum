@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import auth
 from .models import User
+from imagesapp.models import Country, County, City
 
 def register(request):
     if request.method == 'POST':
@@ -13,6 +14,8 @@ def register(request):
         location = request.POST['location']
         password = request.POST['password']
         password2 = request.POST['password2']
+        location = request.POST['location']
+        city = City.objects.get(id=location)
 
         """ check if passwords match """
         if password == password2:
@@ -31,13 +34,10 @@ def register(request):
                         password=password,
                         email=email,
                         first_name=first_name,
-                        last_name=last_name
+                        last_name=last_name,
+                        location=city
                     )
-                    """ login after registration """
-                    """
-                    auth.login(request, user)
-                    messages.success(request, 'You are now logged in')
-                    return redirect('index') """
+                    
                     user.save()
                     messages.success(request, 'You are now registered and can log in')
                     return redirect('login')
@@ -45,7 +45,17 @@ def register(request):
             messages.error(request, 'Passwords do not match')
             return redirect('register')
 
-    return render(request, 'users/register.html')
+    countries = Country.objects.order_by('-name')
+    counties = County.objects.order_by('-name')
+    cities = City.objects.order_by('-name')
+
+    context = {
+        'countries': countries,
+        'counties': counties,
+        'cities': cities
+    }
+
+    return render(request, 'users/register.html', context)
 
 def login(request):
     if request.method == 'POST':

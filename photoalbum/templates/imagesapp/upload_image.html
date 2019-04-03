@@ -25,6 +25,16 @@
                                 <label for="{{ form.description.id_for_label }}">Description</label>
                                 {{ form.description }}
                             </div>
+                            {{ form.category.errors}}
+                            <div class="form-group">
+                                <label for="{{ form.category.id_for_label }}">Category</label>
+                                {{ form.category }}
+                            </div>
+                            {{ form.city.errors}}
+                            <div class="form-group">
+                                <label for="{{ form.city.id_for_label }}">City</label>
+                                {{ form.city }}
+                            </div>
                             {{ form.photo.errors }}
                             <div class="form-group">
                                 <label for="{{ form.photo.id_for_label }}">Photo</label>

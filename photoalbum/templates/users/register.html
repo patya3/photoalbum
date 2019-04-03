@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 
+{% load static%}
+
+{% block scripts %}
+  <script src="{% static 'js/register.js' %}"></script>
+{% endblock %}
 {% block title %} | Register {% endblock %}
 
 {% block content %}
@@ -40,6 +45,31 @@
                 <div class="form-group">
                   <label for="password">Confirm Password</label>
                   <input type="password" name="password2" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label for="country">Country</label>
+                  <select name="country" id="country" class="form-control">
+                    {% for country in countries %}
+                      <option value="{{ country.id }}" {% if country.id == 20 %}selected{% endif %}>{{country.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="county">County</label>
+                  <select name="county" id="county" class="form-control">
+                    {% for county in counties %}
+                      <option value="{{ county.id }}" data-country-id="{{ county.country_id }}">{{county.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="city">City</label>
+                  <select name="location" id="city" class="form-control">
+                    <option selected>City</option>
+                    {% for city in cities %}
+                      <option value="{{ city.id }}" data-country-id="{{ city.country_id }}" data-county-id="{{ city.county_id }}">{{city.name}}</option>
+                    {% endfor %}
+                  </select>
                 </div>
                 <input type="submit" value="Register" class="btn btn-secondary btn-block">
               </form>

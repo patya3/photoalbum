@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 
+{% load static %}
+{% block scripts %}
+    <script src="{% static 'js/filter-helper.js' %}"></script>
+{% endblock %}
+
 {% block content %}
 <section id="showcase-inner" class="py-5 text-white">
     <div class="container">
@@ -8,6 +13,84 @@
                 <h1 class="display-4">Browse Images</h1>
                 <p class="lead">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sunt, pariatur!</p>
             </div>
+        </div>
+    </div>
+</section>
+<section id="showcase-inner" class="showcase-search text-white py-4">
+    <div class="container">
+        <div class="row text-center">
+        <div class="col-md-12">
+            <form action="{% url 'list_images' %}">
+            <!-- Form Row 1 -->
+            <div class="form-row">
+                <div class="col-md-8 mb-3">
+                    <label class="sr-only">Keywords</label>
+                    <input type="text" name="keywords" class="form-control" placeholder="Keyword" value="{{values.keywords}}">
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="sr-only">Select a Country</label>
+                    <select name="country" id="country" class="form-control">
+                        <option selected="true" disabled>Select a Country</option>
+                        {% for country in filters.countries %}
+                            <option value="{{ country.id }}"
+                                {% if country.id == values.country|add:"0" %}
+                                    selected
+                                {% endif %}
+                            >{{country.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-8 mb-3">
+                    <label class="sr-only">Select a category</label>
+                    <select name="category" id="category" class="form-control">
+                        <option selected="true" disabled>Select a Category</option>
+                        {% for category in filters.categories %}
+                            <option value="{{ category.id }}"
+                                {% if category.id == values.category|add:"0" %}
+                                    selected
+                                {% endif %}
+                            >{{category.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="sr-only">Select a County</label>
+                    <select name="county" id="county" class="form-control">
+                        <option selected="true" disabled>Select a County</option>
+                        {% for county in filters.counties %}
+                            <option value="{{ county.id }}"
+                                    data-country-id="{{ county.country_id }}"
+                                    {% if county.id == values.county|add:"0" %}
+                                        selected
+                                    {% endif %}>
+                                    {{county.name}}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-8"></div>
+                <div class="col-md-4 mb-3">
+                    <label class="sr-only">City</label>
+                    <select name="city" id="city" class="form-control">
+                        <option selected="true" disabled>Select a City</option>
+                        {% for city in filters.cities %}
+                            <option value="{{ city.id }}"
+                                    data-country-id="{{ city.country_id }}"
+                                    data-county-id="{{ city.county_id }}"
+                                    {% if city.id == values.city|add:"0" %}
+                                        selected
+                                    {% endif %}>
+                                    {{city.name}}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            <button class="btn btn-secondary btn-block mt-4" type="submit">Submit form</button>
+            </form>
+        </div>
         </div>
     </div>
 </section>
