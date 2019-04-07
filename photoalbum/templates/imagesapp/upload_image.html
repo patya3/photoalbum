@@ -1,6 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<!--breadcrumb-->
+<section id="bc" class="mt-3">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'index' %}">
+                        <i class="fas fa-home"></i> Home</a>
+                </li>
+                <li class="breadcrumb-item active"> Upload Image</li>
+            </ol>
+        </nav>
+    </div>
+</section>
 
 <section id="login" class="bg-light py-5">
     <div class="container">
@@ -9,7 +23,7 @@
                 <div class="card">
                     <div class="card-header bg-primary text-white">
                         <h4>
-                            <i class="fas fa-sign-in-alt"></i> Upload Photo</h4>
+                            <i class="fas fa-sign-in-alt"></i> Upload Image</h4>
                     </div>
                     {% include 'partials/_alerts.html' %}
                     <div class="card-body">

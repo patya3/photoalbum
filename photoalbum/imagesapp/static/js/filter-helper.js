@@ -11,7 +11,7 @@ $('#country').change( () => {
         $('#county').attr('disabled', false);
     }
     $('#city>option').each( function() {
-        if ($(this).data('country-id') != countryID) {
+        if ($(this).data('country-id') != countryID && $(this).val() != -1) {
             $(this).css("display","none");
             $(this).attr("disabled", true);
         } else {
@@ -24,7 +24,7 @@ $('#country').change( () => {
 $('#county').change(() => {
     countyID = $('#county').val();
     $('#city>option').each(function() {
-        if ($(this).data('county-id') != countyID) {
+        if ($(this).data('county-id') != countyID && $(this).val() != -1) {
             $(this).css("display","none");
             $(this).attr("disabled", true);
         } else {
@@ -33,3 +33,8 @@ $('#county').change(() => {
         }
     });
 });
+
+lightbox.option({
+    maxHeight: null,
+    maxWidth: null
+  });

@@ -1,10 +1,16 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.models import auth
+from django.urls import reverse
 from .models import User
-from imagesapp.models import Country, County, City
+from imagesapp.models import Country, County, City, Image, Category
+from imagesapp.forms import ImageModifyForm
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import HttpResponseForbidden
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def register(request):
+
     if request.method == 'POST':
         """ get form values """
         first_name = request.POST['first_name']
@@ -58,6 +64,7 @@ def register(request):
     return render(request, 'users/register.html', context)
 
 def login(request):
+
     if request.method == 'POST':
         """ login user """
         username = request.POST['username']
@@ -68,15 +75,48 @@ def login(request):
         if user is not None:
             auth.login(request, user)
             messages.success(request, 'You are now logged in')
+           
+            if request.GET.get('next'):
+                return HttpResponseRedirect(request.GET.get('next'))
+
             return redirect('index')
         else:
             messages.error(request, 'Invalid credentials')    
             return redirect('login')
 
     return render(request, 'users/login.html')
-    
+
 def logout(request):
-    if request.method == 'POST':
-        auth.logout(request)
-        messages.success(request, 'You are now logged out')
-        return redirect('index')
+
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            auth.logout(request)
+            messages.success(request, 'You are now logged out')
+            return redirect('index')
+    
+    return redirect('index')
+
+@login_required
+def my_images(request, user_id):
+
+    if request.user.id == user_id:
+
+        user_images = Image.objects.filter(user_id=user_id).order_by('-upload_date')
+        categories = Category.objects.values('id', 'name').all()
+        cities = City.objects.values('id', 'name').order_by('-name')
+        form = ImageModifyForm()
+
+        paginator = Paginator(user_images, 6)
+        page = request.GET.get('page')
+        paged_images = paginator.get_page(page)
+
+        context = {
+            'images': paged_images,
+            'categories': categories,
+            'cities': cities,
+            'form': form
+        }
+        
+        return render(request, 'users/my_images.html', context)
+    else:
+        return HttpResponseForbidden()

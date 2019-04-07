@@ -34,6 +34,11 @@
           </li>
         {% else %}
           <li class="nav-item mr-3">
+            <a href="{% url 'my_images' request.user.id %}" class="nav-link">
+              <i class="fas fa-images"></i> My Images
+            </a>
+          </li>
+          <li class="nav-item mr-3">
             <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link">
               <i class="fas fa-sign-out-alt"></i> Logout
             </a>

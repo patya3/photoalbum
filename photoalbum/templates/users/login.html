@@ -15,7 +15,11 @@
             <!-- alerts -->
             {% include 'partials/_alerts.html' %}
             <div class="card-body">
-                <form action="{% url 'login' %}" method="POST">
+                {% if request.GET.next %}
+                  <form action="{% url 'login' %}?next={{ request.GET.next }}" method="POST">  
+                {% else %}
+                  <form action="{% url 'login' %}" method="POST">
+                {% endif %}
                   {% csrf_token %}
                 <div class="form-group">
                   <label for="username">Username</label>

@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import MaxLengthValidator
-from datetime import datetime
+from django.utils import timezone
 
 from users.models import User
 from photoalbum.settings import MEDIA_ROOT
@@ -19,7 +19,7 @@ class Category(models.Model):
     parent_category = models.ForeignKey('self', default=0, on_delete=models.DO_NOTHING, null=True, blank=True)
 
     def __str__(self):
-        return self.name;
+        return self.name
 
 
 class Country(models.Model):
@@ -27,7 +27,7 @@ class Country(models.Model):
     description = models.TextField(max_length=255)
 
     def __str__(self):
-        return self.name;
+        return self.name
 
 
 class County(models.Model):
@@ -35,7 +35,7 @@ class County(models.Model):
     country = models.ForeignKey(Country, on_delete=models.DO_NOTHING)
 
     def __str__(self):
-        return self.name;
+        return self.name
 
 
 class City(models.Model):
@@ -45,7 +45,7 @@ class City(models.Model):
     county = models.ForeignKey(County, on_delete=models.DO_NOTHING, default=0, blank=True, null=True)
 
     def __str__(self):
-        return self.name;
+        return self.name
 
 
 class Image(models.Model):
@@ -55,7 +55,7 @@ class Image(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     category = models.ForeignKey(Category, on_delete=models.DO_NOTHING)
     city = models.ForeignKey(City, on_delete=models.DO_NOTHING)
-    upload_date = models.DateTimeField(default=datetime.now, blank=True)
+    upload_date = models.DateTimeField(default=timezone.now, blank=True)
 
     def remove_on_image_update(self):
         try:

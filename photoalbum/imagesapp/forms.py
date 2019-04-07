@@ -18,3 +18,18 @@ class ImageUploadForm(forms.ModelForm):
             self.fields[field].widget.attrs = {
                 'class': 'form-control'
             }
+
+
+class ImageModifyForm(forms.ModelForm):
+
+    class Meta:
+        model = Image
+        fields = ['name', 'description', 'category', 'city']
+        
+    def __init__(self, *args, **kwargs):
+        super(ImageModifyForm, self).__init__(*args, **kwargs)
+        
+        for field in self.fields:
+            self.fields[field].widget.attrs = {
+                'class': 'form-control'
+            }

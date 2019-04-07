@@ -2,6 +2,7 @@
 
 {% load static %}
 {% block scripts %}
+    <script src="{% static 'js/lightbox.min.js' %}"></script>
     <script src="{% static 'js/filter-helper.js' %}"></script>
 {% endblock %}
 
@@ -31,7 +32,7 @@
                 <div class="col-md-4 mb-3">
                     <label class="sr-only">Select a Country</label>
                     <select name="country" id="country" class="form-control">
-                        <option selected="true" disabled>Select a Country</option>
+                        <option selected="true" value="-1">Select a Country</option>
                         {% for country in filters.countries %}
                             <option value="{{ country.id }}"
                                 {% if country.id == values.country|add:"0" %}
@@ -45,7 +46,7 @@
                 <div class="col-md-8 mb-3">
                     <label class="sr-only">Select a category</label>
                     <select name="category" id="category" class="form-control">
-                        <option selected="true" disabled>Select a Category</option>
+                        <option selected="true" value="-1">Select a Category</option>
                         {% for category in filters.categories %}
                             <option value="{{ category.id }}"
                                 {% if category.id == values.category|add:"0" %}
@@ -59,7 +60,7 @@
                 <div class="col-md-4 mb-3">
                     <label class="sr-only">Select a County</label>
                     <select name="county" id="county" class="form-control">
-                        <option selected="true" disabled>Select a County</option>
+                        <option selected="true" value="-1">Select a County</option>
                         {% for county in filters.counties %}
                             <option value="{{ county.id }}"
                                     data-country-id="{{ county.country_id }}"
@@ -71,11 +72,18 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="col-md-8"></div>
+                <div class="col-md-4 mb-3">
+                    <label class="sr-only">Date From</label>
+                    <input type="date" name="date_from" class="form-control" value="{{ values.date_from }}">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="sr-only">Date To</label>
+                    <input type="date" name="date_to" class="form-control" value="{{ values.date_to }}">
+                </div>
                 <div class="col-md-4 mb-3">
                     <label class="sr-only">City</label>
                     <select name="city" id="city" class="form-control">
-                        <option selected="true" disabled>Select a City</option>
+                        <option selected="true" value="-1">Select a City</option>
                         {% for city in filters.cities %}
                             <option value="{{ city.id }}"
                                     data-country-id="{{ city.country_id }}"
@@ -116,26 +124,28 @@
         <div class="row">
 
             {% if images %}
-            {% for image in images %}
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card listing-preview">
-                    <img class="card-img-top" src="{{ image.photo.url }}" alt="">
-                    <div class="card-body">
-                        <div class="listing-heading text-center">
-                            <h4 class="text-primary">{{ image.name }}</h4>
-                            <p>
-                                <i class="fas fa-map-marker text-secondary"></i>{{ image.description }}</p>
+                {% for image in images %}
+                    <div class="col-md-6 col-lg-4 mb-4 gallery">
+                        <div class="card listing-preview">
+                            <a href="{{ image.photo.url }}" data-lightbox="images">
+                                <img class="card-img-top" src="{{ image.photo.url }}" alt="">
+                            </a>
+                            <div class="card-body">
+                                <div class="listing-heading text-center">
+                                    <h4 class="text-primary">{{ image.name }}</h4>
+                                    <p>
+                                        <i class="fas fa-map-marker text-secondary"></i>{{ image.description }}</p>
+                                </div>
+                                <hr>
+                                <a href="{% url 'image' image.id %}" class="btn btn-primary btn-block">More Info</a>
+                            </div>
                         </div>
-                        <hr>
-                        <a href="{% url 'image' image.id %}" class="btn btn-primary btn-block">More Info</a>
                     </div>
-                </div>
-            </div>
-            {% endfor %}
+                {% endfor %}
             {% else %}
-            <div class="col-md-12">
-                <p>No images avaliable</p>
-            </div>
+                <div class="col-md-12">
+                    <p>No images avaliable</p>
+                </div>
             {% endif %}
         </div>
 
@@ -145,7 +155,7 @@
                     <ul class="pagination">
                         {% if images.has_previous %}
                             <li class="page-item">
-                                <a href="?page={{images.previous_page_number}}" class="page-link">&laquo;</a>
+                                <a href="?page={{images.previous_page_number}}&keywords={{ request.GET.keywords }}&country={{ request.GET.country }}&category={{ request.GET.category }}&county={{ request.GET.county}}&date_from={{ request.GET.date_from }}&date_to={{ request.GET.date_to }}&city={{ request.GET.city }}" class="page-link">&laquo;</a>
                             </li>
                         {% else %}
                             <li class="page-item disabled">
@@ -159,13 +169,13 @@
                                 </li>
                             {% else %}
                                 <li class="page-item">
-                                    <a href="?page={{i}}" class="page-link">{{i}}</a>
+                                    <a href="?page={{i}}&keywords={{ request.GET.keywords }}&country={{ request.GET.country }}&category={{ request.GET.category }}&county={{ request.GET.county}}&date_from={{ request.GET.date_from }}&date_to={{ request.GET.date_to }}&city={{ request.GET.city }}" class="page-link">{{i}}</a>
                                 </li>
                             {% endif %}
                         {% endfor %}
                         {% if images.has_next %}
                             <li class="page-item">
-                                <a href="?page={{images.next_page_number}}" class="page-link">&raquo;</a>
+                                <a href="?page={{images.next_page_number}}&keywords={{ request.GET.keywords }}&country={{ request.GET.country }}&category={{ request.GET.category }}&county={{ request.GET.county}}&date_from={{ request.GET.date_from }}&date_to={{ request.GET.date_to }}&city={{ request.GET.city }}" class="page-link">&raquo;</a>
                             </li>
                         {% else %}
                             <li class="page-item disabled">
