@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, HttpResponseRedirect, get_object_
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import auth
-from django.db.models import Q
+from django.db.models import Q, F
 from django.http import HttpResponse, HttpResponseForbidden
 from datetime import date
 from django.urls import reverse
@@ -135,6 +135,7 @@ def update_image(request, image_id):
         
         return HttpResponseForbidden()
 
+@require_GET
 def delete_image(request, image_id):
     
     if request.method == 'GET':
