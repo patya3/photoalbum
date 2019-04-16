@@ -12,5 +12,6 @@ Setting up from "photoalbum/" folder
     OR 
    python manage.py makemigrations (maybe collect all model)
 4. python manage.py migrate (run migration files and create tables in database)
-5. django-admin creatsuperuser
-6. python manage.py runserver
+5. python manage.py loaddata db.json
+6. django-admin creatsuperuser
+7. python manage.py runserver
