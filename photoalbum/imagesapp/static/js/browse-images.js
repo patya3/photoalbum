@@ -41,4 +41,12 @@ lc_lightbox('.elem', {
     thumb_attr: 'data-lcl-thumb', 
     skin: 'dark',
     // more options here
-}); 
+});
+
+$(function() { 
+    $('.list-group-item').on('click', function() {
+        $('.fas', this)
+        .toggleClass('fa-chevron-right')
+        .toggleClass('fa-chevron-down');
+    });
+});

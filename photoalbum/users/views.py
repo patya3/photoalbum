@@ -101,7 +101,9 @@ def logout(request):
     return redirect('index')
 
 @login_required
-def my_images(request, user_id):
+def my_images(request, user_id,
+                template='users/my_images.html',
+                page_template='partials/_image_list_my_images.html'):
 
     if request.user.id == user_id:
 
@@ -110,19 +112,18 @@ def my_images(request, user_id):
         categories = Category.objects.values('id', 'name').all()
         cities = City.objects.values('id', 'name').order_by('-name')
         form = ImageModifyForm()
-
-        paginator = Paginator(user_images, 6)
-        page = request.GET.get('page')
-        paged_images = paginator.get_page(page)
-
+        
         context = {
-            'images': paged_images,
+            'images': user_images,
             'categories': categories,
             'cities': cities,
             'form': form
         }
+
+        if request.is_ajax():
+            template = page_template
         
-        return render(request, 'users/my_images.html', context)
+        return render(request, template, context)
     else:
         return HttpResponseForbidden()
 
@@ -151,8 +152,9 @@ def leaderboard(request):
 
     return render(request, 'users/leaderboard.html', context)
 
-def profile(request, user_id):
-    # TODO user rank
+def profile(request, user_id,
+            template='users/profile.html',
+            page_template='partials/_image_list.html'):
 
     #SELECT "USERS_USER"."USERNAME", "USERS_USER"."FIRST_NAME", "USERS_USER"."LAST_NAME", "USERS_USER"."EMAIL",
     #       "IMAGESAPP_CITY"."NAME", "USERS_USER"."DATE_JOINED", "IMAGESAPP_COUNTRY"."NAME"
@@ -193,14 +195,13 @@ def profile(request, user_id):
         where a.id = ' + str(user_id)
     )[:1]
 
-    paginator = Paginator(user_images, 6)
-    page = request.GET.get('page')
-    paged_user_images = paginator.get_page(page)
-
     context = {
         'user': user,
-        'user_images': paged_user_images,
+        'images': user_images,
         'user_rank': user_rank
     }
 
-    return render(request, 'users/profile.html', context)
+    if request.is_ajax():
+        template = page_template
+
+    return render(request, template, context)

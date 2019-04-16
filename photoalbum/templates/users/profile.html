@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load bootstrap_pagination %}
 {% block scripts %}
     <script src="{% static 'js/lc_lightbox.lite.min.js' %}"></script>
-    <script src="{% static 'js/filter-helper.js' %}"></script>
+    <script src="{% static 'js/el-pagination.js' %}"></script>
+    <script>$.endlessPaginate({paginateOnScroll: true});</script>
 {% endblock %}
 {% block stylesheets %}
     <link rel="stylesheet" href="{% static 'css/lc_lightbox.min.css' %}">
@@ -32,7 +32,7 @@
     <div class="row">
       <div class="col-md-3">
         <div class="card mb-3">
-          <img class="card-img-top" src="/media/{{ user_images.0.photo }}" alt="Last uploaded image">
+          <img class="card-img-top" src="/media/{{ images.0.photo }}" alt="Last uploaded image">
           <div class="card-body">
             <h5 class="card-title">{{ user.username }}</h5>
             <h6 class="text-secondary">{{ user.first_name }} {{ user.last_name }}</h6>
@@ -92,38 +92,14 @@
   <div class="container">
       <div class="row">
 
-          {% if user_images %}
-              {% for image in user_images %}
-                  <div class="col-md-6 col-lg-4 mb-4 gallery">
-                      <div class="card listing-preview">
-                          <a class="elem" 
-                              href="{{ image.photo.url }}" 
-                              title="{{ image.name }}" 
-                              data-lcl-txt="{{ image.description }}" 
-                              data-lcl-author="{{ image.user.username }}" 
-                              data-lcl-thumb="{{ image.photo.url }}">
-                          <span style="background-image: url({{ image.photo.url }});"></span>
-                          <img class="card-img-top" src="{{ image.photo.url }}" alt="{{ image.name }}">
-                          </a>
-                          <div class="card-body">
-                              <div class="listing-heading text-center">
-                                  <h4 class="text-primary">{{ image.name }}</h4>
-                                  {% comment %} <p>
-                                      <i class="fas fa-map-marker text-secondary"></i>{{ image.description }}</p> {% endcomment %}
-                              </div>
-                              <hr>
-                              <a href="{% url 'image' image.id %}" class="btn btn-primary btn-block">Details | Comment</a>
-                          </div>
-                      </div>
-                  </div>
-              {% endfor %}
+          {% if images %}
+              {% include 'partials/_image_list.html' %}
           {% else %}
               <div class="col-md-12">
                   <p>No images avaliable</p>
               </div>
           {% endif %}
       </div>
-      {% bootstrap_paginate user_images %}
   </div>
 </section>
 {% endblock  %}

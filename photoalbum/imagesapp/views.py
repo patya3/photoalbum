@@ -8,6 +8,7 @@ from datetime import date
 from django.urls import reverse
 from django.views.decorators.http import require_POST, require_GET, require_http_methods
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 
 from .models import Image, Category, Country, County, City
 from .forms import ImageUploadForm, ImageModifyForm
@@ -16,7 +17,7 @@ from .forms import ImageUploadForm, ImageModifyForm
 def upload_image(request):
 
     if request.method == 'POST':
-        print(request)
+
         """ upload photo """
         form = ImageUploadForm(data=request.POST, files=request.FILES)
 
@@ -42,19 +43,40 @@ def upload_image(request):
     return HttpResponseRedirect('upload_image')
 
 @require_http_methods(["GET", "POST"])
-def index(request):
+def index(request,
+            template='imagesapp/list_images.html',
+            page_template='partials/_image_list.html'):
 
-    categories = Category.objects.order_by('-id')
+    categories = Category.objects.annotate(image_count=Count('image__id')).order_by('-parent_category_id')
     cities = City.objects.values('id', 'name', 'country_id', 'county_id').order_by('-name')
     counties = County.objects.order_by('-name')
     countries = Country.objects.values('id', 'name').order_by('-name')
 
     images = Image.objects.order_by('-upload_date')
+    new_categories = []
+    for category in categories:
+        new_categories.append({
+            'id': category.id,
+            'name': category.name,
+            'image_count': category.image_count,
+            'parent_category_id': category.parent_category_id,
+            'subcategories': []
+        })
+
+    for category in new_categories:
+        if category['parent_category_id'] not in {0, None}:
+            for parent_cat in new_categories:
+                if category['parent_category_id'] == parent_cat['id']:
+                    parent_cat['subcategories'].append(category)
+                    parent_cat['image_count'] = parent_cat['image_count'] + category['image_count']
+
+    categories = [cat for cat in new_categories if cat['parent_category_id'] is None]
 
     if 'keywords' in request.GET:
         keywords = request.GET['keywords']
         if keywords:
-            images = images.filter(Q(name__icontains=keywords) | Q(description__icontains=keywords))
+            images = images.filter(Q(name__icontains=keywords) |
+                                   Q(description__icontains=keywords))
     
     if 'country' in request.GET:
         country = request.GET['country']
@@ -74,7 +96,8 @@ def index(request):
     if 'category' in request.GET:
         category = request.GET['category']
         if category and int(category) != -1:
-            images = images.filter(category_id=category)
+            images = images.filter(Q(category_id=category) |
+                                   Q(category__parent_category_id=category))
 
     if 'date_from' in request.GET:
         date_from = request.GET['date_from'].split('-')
@@ -90,22 +113,21 @@ def index(request):
                                                         int(date_to[1]),
                                                         int(date_to[2])))
 
-    paginator = Paginator(images, 6)
-    page = request.GET.get('page')
-    paged_images = paginator.get_page(page)
-
-
     context = {
-        'images': paged_images,
+        'images': images,
         'filters': {
-            'categories': categories,
             'countries': countries,
             'counties': counties,
             'cities': cities
         },
+        'categories': categories,
         'values': request.GET
     }
-    return render(request, 'imagesapp/list_images.html', context)
+
+    if request.is_ajax():
+        template = page_template
+
+    return render(request, template, context)
 
 def image(request, image_id):
     image = get_object_or_404(Image, pk=image_id)

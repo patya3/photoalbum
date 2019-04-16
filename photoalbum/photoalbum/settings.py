@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap_pagination',
+    'el_pagination',
     'users',
     'pages',
     'imagesapp',
@@ -144,3 +145,5 @@ AUTH_USER_MODEL = 'users.User'
 
 #login url
 LOGIN_URL = '/users/login'
+
+EL_PAGINATION_PER_PAGE = 6
