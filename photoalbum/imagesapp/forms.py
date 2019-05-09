@@ -1,5 +1,5 @@
 from django import forms
-from .models import Image
+from .models import Image, Rating
 
 from django.contrib.auth.models import auth
 
@@ -33,3 +33,23 @@ class ImageModifyForm(forms.ModelForm):
             self.fields[field].widget.attrs = {
                 'class': 'form-control'
             }
+
+
+class ImageRateForm(forms.ModelForm):
+    
+    class Meta:
+        model = Rating
+        fields = ['stars', 'comment']
+
+    def __init__(self, *args, **kwargs):
+        super(ImageRateForm, self).__init__(*args, **kwargs)
+
+        self.fields['stars'].widget.attrs = {
+            'class': 'form-control width-10',
+            'min':'0',
+            'max': '5'
+        }
+
+        self.fields['comment'].widget.attrs = {
+            'class': 'form-control'
+        }

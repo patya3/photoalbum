@@ -10,8 +10,9 @@ from django.views.decorators.http import require_POST, require_GET, require_http
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 
-from .models import Image, Category, Country, County, City
-from .forms import ImageUploadForm, ImageModifyForm
+from .models import Image, Category, Country, County, City, Rating
+from .forms import ImageUploadForm, ImageModifyForm, ImageRateForm
+import import_script
 
 @login_required
 def upload_image(request):
@@ -129,19 +130,25 @@ def index(request,
 
     return render(request, template, context)
 
-def image(request, image_id):
+def image(request, image_id, new_context = {}):
+    """ image subpage with rating """
     image = get_object_or_404(Image, pk=image_id)
+    ratings = Rating.objects.filter(image_id=image_id).order_by('-id')
+
+    form = ImageRateForm()
 
     context = {
-        'image': image
+        'image': image,
+        'form': form,
+        'ratings': ratings
     }
+    context.update(new_context)
 
     return render(request, 'imagesapp/image.html', context)
 
-""" JOBB LENNE AJAX-AL """
 @require_POST
 def update_image(request, image_id):
-
+    """ update a image's data """
     if request.method == 'POST':
         image = Image.objects.get(pk=image_id)
         if request.user == image.user:
@@ -167,3 +174,27 @@ def delete_image(request, image_id):
             image.delete()
 
             return HttpResponse(status=200)
+
+@login_required
+@require_POST
+def rate_image(request, image_id):
+    """ rate image with comment on image subpage """
+    if request.user.is_authenticated:
+        form = ImageRateForm(data=request.POST)
+
+        if form.is_valid():
+            rateModel = form.save(commit=False)
+            rateModel.image = get_object_or_404(Image, pk=image_id)
+            rateModel.save()
+
+            messages.success(request, 'Successfully rated the Image.')
+            return HttpResponseRedirect(reverse('image', args=[image_id]))
+        else:
+            return image(request, image_id, {'form': form, 'errors': form.errors})
+    
+    return HttpResponse(status=200)
+
+def json_load(request):
+    """ for import data to database from json files """
+    import_script.load_pop()
+    return HttpResponse(status=200)
