@@ -97,7 +97,7 @@
                                     {% if city.id == values.city|add:"0" %}
                                         selected
                                     {% endif %}>
-                                    {{city.name}}
+                                    {{city.name}} | {{ city.image_count }}
                             </option>
                         {% endfor %}
                     </select>
@@ -146,6 +146,26 @@
                 </div>
             </div>
             <div class="col-md-9">
+                {% if values.category and values.category != "-1" and top_in_category %}
+                    <div class="col-md-12 col-lg-12 mb-4 gallery" style="padding: 0">
+                        <div class="card mb-3" >
+                            <div class="row no-gutters">
+                                <div class="col-md-4">
+                                <img src="{{ top_in_category.photo.url }}" class="card-img" alt="{{ city.city__name }}">
+                                </div>
+                                <div class="col-md-8">
+                                <div class="card-body">
+                                    <h2 class="card-title">{{ top_in_category.name }}</h5>
+                                    <div class="card-text">
+                                        <span class="text-secondary">Rating:</span> {{ top_in_category.avg_rating }}
+                                    </div>
+                                    <a href="{% url 'image' top_in_category.id %}" class="btn btn-primary bottom-right text-light">View image</a>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
                 <div class="row">
                 {% if images %}
                     {% include 'partials/_image_list.html' %}

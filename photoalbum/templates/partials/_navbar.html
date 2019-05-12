@@ -12,11 +12,18 @@
         <li class="nav-item active mr-3">
           <a class="nav-link" href="{% url 'index' %}">Home</a>
         </li>
-        <li class="nav-item mr-3">
-          <a class="nav-link" href="{% url 'upload_image' %}">Upload Image</a>
+        <li class="dropdown nav-item mr-3">
+          <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Images
+          </a>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="{% url 'list_images' %}">Browse images</a>
+            <a class="dropdown-item" href="{% url 'cities_faces' %}">Faces of the Cities</a>
+            <a class="dropdown-item" href="{% url 'popular_destinations'%}">Popular destinations</a>
+          </div>
         </li>
         <li class="nav-item mr-3">
-          <a class="nav-link" href="{% url 'list_images' %}">Browse images</a>
+          <a class="nav-link" href="{% url 'upload_image' %}">Upload Image</a>
         </li>
         <li class="nav-item mr-3">
           <a class="nav-link" href="{% url 'leaderboard' %}">Leaderboard</a>

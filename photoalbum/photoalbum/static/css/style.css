@@ -395,3 +395,10 @@ img {
 .list-group-item .fas {
     margin-right: 5px;
 }
+
+.bottom-right {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 10px;
+}

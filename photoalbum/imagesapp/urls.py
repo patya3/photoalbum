@@ -8,5 +8,7 @@ urlpatterns = [
     path('update_image/<int:image_id>', views.update_image, name='update_image'),
     path('delete_image/<int:image_id>', views.delete_image, name='delete_image'),
     path('json_load', views.json_load),
-    path('rate_image/<int:image_id>', views.rate_image, name='rate_image')
+    path('rate_image/<int:image_id>', views.rate_image, name='rate_image'),
+    path('cities_faces', views.cities_faces, name='cities_faces'),
+    path('popular_destinations', views.popular_destiantions, name='popular_destinations')
 ]
