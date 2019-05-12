@@ -138,7 +138,9 @@ def index(request,
             # GROUP BY "IMAGESAPP_IMAGE"."ID", "IMAGESAPP_IMAGE"."NAME", "IMAGESAPP_IMAGE"."PHOTO"
             # HAVING NOT (AVG("IMAGESAPP_RATING"."STARS") IS NULL)
             # ORDER BY "AVG_RATING" DESC  FETCH FIRST 1 ROWS ONLY
-            top_in_category = Image.objects.filter(category_id=category).only(
+            top_in_category = Image.objects.filter(
+                    Q(category_id=category) | Q(category__parent_category_id=category)
+                ).only(
                 'id',
                 'name',
                 'photo'
