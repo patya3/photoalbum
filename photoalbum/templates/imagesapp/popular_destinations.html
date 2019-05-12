@@ -51,7 +51,7 @@
                                     {% endif %}
                                 </p>
                                 <div class="card-text">
-                                    <span class="text-secondary">Images taken from that city:</span> {{ city.count_image }}
+                                    <span class="text-secondary">Images taken from that city by tourists:</span> {{ city.count_image }}
                                 </div>
                                 <a href="{% url 'list_images' %}?city={{ city.city_id }}"class="btn btn-primary bottom-right text-light">View all images</a>
                             </div>

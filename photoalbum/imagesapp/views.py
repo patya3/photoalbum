@@ -134,8 +134,10 @@ def index(request,
             # SELECT "IMAGESAPP_IMAGE"."ID", "IMAGESAPP_IMAGE"."NAME", "IMAGESAPP_IMAGE"."PHOTO", AVG("IMAGESAPP_RATING"."STARS") AS "AVG_RATING", COUNT("IMAGESAPP_RATING"."ID") AS "COUNT_RATING"
             # FROM "IMAGESAPP_IMAGE"
             # LEFT OUTER JOIN "IMAGESAPP_RATING" ON ("IMAGESAPP_IMAGE"."ID" = "IMAGESAPP_RATING"."IMAGE_ID")
-            # WHERE "IMAGESAPP_IMAGE"."CATEGORY_ID" = 9 GROUP BY "IMAGESAPP_IMAGE"."ID", "IMAGESAPP_IMAGE"."NAME", "IMAGESAPP_IMAGE"."PHOTO"
-            # ORDER BY "AVG_RATING" ASC  FETCH FIRST 1 ROWS ONLY
+            # WHERE "IMAGESAPP_IMAGE"."CATEGORY_ID" = 9
+            # GROUP BY "IMAGESAPP_IMAGE"."ID", "IMAGESAPP_IMAGE"."NAME", "IMAGESAPP_IMAGE"."PHOTO"
+            # HAVING NOT (AVG("IMAGESAPP_RATING"."STARS") IS NULL)
+            # ORDER BY "AVG_RATING" DESC  FETCH FIRST 1 ROWS ONLY
             top_in_category = Image.objects.filter(category_id=category).only(
                 'id',
                 'name',
@@ -144,8 +146,7 @@ def index(request,
                     avg_rating=Avg('rating__stars')
                     ).annotate(
                         count_rating=Count('rating__id')
-                        ).order_by('avg_rating')[:1]
-            print(top_in_category.query)
+                        ).filter(~Q(avg_rating=None)).order_by('-avg_rating')[:1]
 
     if 'date_from' in request.GET:
         date_from = request.GET['date_from'].split('-')
@@ -172,7 +173,7 @@ def index(request,
         'values': request.GET
     }
 
-    if top_in_category is not None:
+    if top_in_category is not None and top_in_category:
         context.update({'top_in_category': top_in_category[0]})
 
     if request.is_ajax():
