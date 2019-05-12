@@ -8,7 +8,7 @@ from datetime import date
 from django.urls import reverse
 from django.views.decorators.http import require_POST, require_GET, require_http_methods
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
+from django.db.models import Count, Avg
 
 from .models import Image, Category, Country, County, City, Rating
 from .forms import ImageUploadForm, ImageModifyForm, ImageRateForm
@@ -53,7 +53,10 @@ def index(request,
     counties = County.objects.order_by('-name')
     countries = Country.objects.values('id', 'name').order_by('-name')
 
-    images = Image.objects.order_by('-upload_date')
+    images = Image.objects.defer('text_field').annotate(rate_avg=Avg('rating__stars')).order_by('-upload_date')
+    images = Rating.objects.annotate(rate_avg=Avg('stars'))
+    # images = Image.objects.order_by('-upload_date')
+    print(images.query  )
     new_categories = []
     for category in categories:
         new_categories.append({
