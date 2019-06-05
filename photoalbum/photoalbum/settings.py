@@ -80,11 +80,12 @@ WSGI_APPLICATION = 'photoalbum.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.oracle',
-        'NAME': '192.168.0.24:1521/xe',
-        'USER': 'patya3',
-        'PASSWORD': 'Password2018',
-
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'photoalbum',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '3306'
     }
 }
 

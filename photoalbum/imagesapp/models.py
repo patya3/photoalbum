@@ -16,7 +16,7 @@ def get_file_path(instance, filename):
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    parent_category = models.ForeignKey('self', default=0, on_delete=models.DO_NOTHING, null=True, blank=True)
+    parent_category = models.ForeignKey('self', on_delete=models.DO_NOTHING, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -42,7 +42,7 @@ class City(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(max_length=255)
     country = models.ForeignKey(Country, on_delete=models.DO_NOTHING)
-    county = models.ForeignKey(County, on_delete=models.DO_NOTHING, default=0, blank=True, null=True)
+    county = models.ForeignKey(County, on_delete=models.DO_NOTHING, blank=True, null=True)
 
     def __str__(self):
         return self.name
