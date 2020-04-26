@@ -1,5 +1,6 @@
 from datetime import datetime
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
+from django.template import RequestContext
 from django.db.models import Count, Max
 
 from imagesapp.models import Image, City
