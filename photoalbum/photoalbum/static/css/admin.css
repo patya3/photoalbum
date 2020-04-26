@@ -29,3 +29,7 @@ div.breadcrumbs {
     background: #10284e;
     color: white;
 }
+
+.django-ckeditor-widget {
+    width: 100%;
+}

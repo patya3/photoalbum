@@ -9,6 +9,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_POST, require_GET, require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Avg, Max
+from django.utils.translation import gettext as _
 
 from .models import Image, Category, Country, County, City, Rating
 from .forms import ImageUploadForm, ImageModifyForm, ImageRateForm
@@ -27,7 +28,7 @@ def upload_image(request):
             imageModel.user = request.user
             imageModel.save()
 
-            messages.success(request, 'Successfully uploaded')
+            messages.success(request, _('Successfully uploaded'))
             return redirect('upload_image')
         else:
             return render(request, 'imagesapp/upload_image.html', {'form': form, 'errors': form.errors})    

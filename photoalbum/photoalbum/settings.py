@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from django.utils.translation import ugettext_lazy as _
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -31,11 +32,16 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'ckeditor',
+    'django_summernote',
+    'admin_toolbox',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.flatpages',
+    'django.contrib.sites',
     'django.contrib.staticfiles',
     'bootstrap_pagination',
     'el_pagination',
@@ -52,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 ]
 
 ROOT_URLCONF = 'photoalbum.urls'
@@ -68,6 +75,14 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries': {
+                'evaluate_tag': 'photoalbum.templatetags.evaluate_tag',
+                'slider_tag': 'imagesapp.slider_tag'
+            },
+            'builtins': [
+                'photoalbum.templatetags.evaluate_tag',
+                'imagesapp.slider_tag'
+            ]
         },
     },
 ]
@@ -112,7 +127,16 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'hu-HU'
+
+LANGUAGES = (
+    ('en', _('English')),
+    ('hu', _('Hungarian')),
+)
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale'),
+)
 
 TIME_ZONE = 'UTC'
 
@@ -122,6 +146,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+SITE_ID = 1
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
@@ -148,3 +173,76 @@ AUTH_USER_MODEL = 'users.User'
 LOGIN_URL = '/users/login'
 
 EL_PAGINATION_PER_PAGE = 6
+
+ADMIN_TOOLBOX = {
+    'sidebar': {
+        'default': ('admin_toolbox.builders.AppsListBuilder', 
+            dict(name='noname', items=(['admin_toolbox.builders.ItemBuilder', {'url': 'url', 'name': 'name'}]))
+        ),
+        'default': (
+            'admin_toolbox.builders.AppsListBuilder', {
+                'name': 'nomee',
+                'items': (
+                    ['admin_toolbox.builders.ItemBuilder', {
+                        'url': 'kecske',
+                        'name': 'random',
+                        'icon': 'fas fa-times-circle'
+                    }],
+                )
+            },
+        )
+    },
+    'breadcrumbs': 'smart',
+}
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'height': '500',
+        'width': '100%',
+        'toolbar_YourCustomToolbarConfig': [
+            {'name': 'document', 'items': ['Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates']},
+            {'name': 'clipboard', 'items': ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']},
+            {'name': 'editing', 'items': ['Find', 'Replace', '-', 'SelectAll']},
+            {'name': 'forms',
+             'items': ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
+                       'HiddenField']},
+            '/',
+            {'name': 'basicstyles',
+             'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']},
+            {'name': 'paragraph',
+             'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
+                       'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl',
+                       'Language']},
+            {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
+            {'name': 'insert',
+             'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe']},
+            '/',
+            {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
+            {'name': 'colors', 'items': ['TextColor', 'BGColor']},
+            {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
+            {'name': 'about', 'items': ['About']},
+        ],
+        'toolbar': 'YourCustomToolbarConfig',
+    }
+}
+
+# summernote configuration
+SUMMERNOTE_THEME = 'bs4'
+
+SUMMERNOTE_CONFIG = {
+    'summernote': {
+        'width': '100%',
+        'height': '600px'
+    },
+    'css': (
+        '//cdnjs.cloudflare.com/ajax/libs/codemirror/5.29.0/theme/monokai.min.css',
+    ),
+    'codemirror': {
+        'mode': 'htmlmixed',
+        'lineNumbers': 'true',
+
+        # You have to include theme file in 'css' or 'css_for_inplace' before using it.
+        'theme': 'monokai',
+    },
+
+}
